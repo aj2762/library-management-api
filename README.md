@@ -1,40 +1,35 @@
-<div dir="rtl">
+# Library Management API
 
-# API مدیریت کتابخانه (Library Management API)
+A beginner-friendly REST API for managing library books, built with FastAPI.
 
-یک API ساده برای مدیریت کتاب‌های کتابخانه، ساخته‌شده با FastAPI. کتاب‌ها داخل حافظه‌ی برنامه نگهداری می‌شوند و از دیتابیس استفاده نشده است.
+## Features
 
-## قابلیت‌ها
+- `GET /books` — list all books
+- `POST /books` — add a book
+- `GET /books/{book_id}` — get a book by ID
+- `PATCH /books/{book_id}` — update selected fields of a book
+- `DELETE /books/{book_id}` — delete a book by ID
 
-| متد | آدرس | توضیح |
-|---|---|---|
-| `GET` | `/books` | دریافت لیست همه‌ی کتاب‌ها |
-| `POST` | `/books` | اضافه کردن یک کتاب جدید |
-| `GET` | `/books/{book_id}` | دریافت اطلاعات یک کتاب با شناسه‌ی آن |
-| `PATCH` | `/books/{book_id}` | تغییر بخشی از اطلاعات یک کتاب |
-| `DELETE` | `/books/{book_id}` | حذف یک کتاب با شناسه‌ی آن |
+## Technologies
 
-## فیلدهای کتاب
-
-| فیلد | نوع | اجباری |
-|---|---|---|
-| `title` | متن | بله |
-| `author` | متن | بله |
-| `publication_year` | عدد | خیر |
-| `publisher` | متن | خیر |
-
-شناسه‌ی هر کتاب (`id`) را برنامه خودش می‌سازد، از عدد ۱ شروع می‌شود و برای هر کتاب جدید یکی بیشتر می‌شود.
-
-## تکنولوژی‌ها
-
-- Python نسخه‌ی ۳.۱۰ یا بالاتر
+- Python 3.10+
 - FastAPI
 - Pydantic
+- SQLAlchemy (ORM)
+- PostgreSQL (via psycopg 3)
 - Uvicorn
 
-## نصب و اجرا (ویندوز، PowerShell)
+## Setup (Windows PowerShell)
 
-</div>
+1. Install PostgreSQL and create a database:
+
+```sql
+CREATE DATABASE library;
+```
+
+2. Copy `.env.example` to `.env` and put your real password in `DATABASE_URL`.
+
+3. Install and run:
 
 ```powershell
 python -m venv .venv
@@ -43,19 +38,11 @@ pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-<div dir="rtl">
+Open http://127.0.0.1:8000/docs to try the API.
 
-بعد از اجرا، آدرس زیر را در مرورگر باز کنید تا بتوانید همه‌ی مسیرها را امتحان کنید:
+## Example: Add a book
 
-http://127.0.0.1:8000/docs
-
-## نمونه‌ی درخواست‌ها
-
-### اضافه کردن کتاب
-
-یک درخواست `POST` به آدرس `/books` با این بدنه‌ی JSON بفرستید:
-
-</div>
+Send a `POST` request to `/books` with this JSON body:
 
 ```json
 {
@@ -66,13 +53,9 @@ http://127.0.0.1:8000/docs
 }
 ```
 
-<div dir="rtl">
+## Example: Update only the title
 
-### تغییر فقط عنوان کتاب
-
-یک درخواست `PATCH` به آدرس `/books/1` بفرستید. فقط فیلدهایی که می‌فرستید تغییر می‌کنند:
-
-</div>
+Send a `PATCH` request to `/books/1`:
 
 ```json
 {
@@ -80,27 +63,6 @@ http://127.0.0.1:8000/docs
 }
 ```
 
-<div dir="rtl">
+## Data storage
 
-### دریافت و حذف کتاب
-
-- `GET /books/1` اطلاعات کتابی که شناسه‌اش ۱ است را برمی‌گرداند.
-- `DELETE /books/1` همان کتاب را حذف می‌کند.
-
-اگر کتابی با شناسه‌ی داده‌شده وجود نداشته باشد، پاسخ `404` با پیام `Book not found` برمی‌گردد.
-
-## ذخیره‌سازی داده‌ها
-
-کتاب‌ها داخل یک دیکشنری پایتون در حافظه نگهداری می‌شوند و از دیتابیس استفاده نشده است. با بستن یا ری‌استارت شدن برنامه، همه‌ی داده‌ها پاک می‌شوند.
-
-## ساختار پروژه
-
-</div>
-
-```text
-library-management-api/
-├── main.py            # کد برنامه و مسیرهای API
-├── requirements.txt   # کتابخانه‌های مورد نیاز
-├── README.md          # توضیحات پروژه
-└── .gitignore
-```
+Books are stored in a PostgreSQL `books` table, accessed with SQLAlchemy. The table is created automatically on startup, and data persists across restarts.
